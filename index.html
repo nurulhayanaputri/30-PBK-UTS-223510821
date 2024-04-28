@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vue.js Activity List</title>
+  <!-- Include Vue.js -->
+  <script src="https://cdn.jsdelivr.net/npm/vue@3.2.13/dist/vue.global.prod.js"></script>
+</head>
+<body>
+
+<!-- Vue Component -->
+<div id="app">
+  <!-- Main container div -->
+  <div class="background">
+    <h1>Nurul Hayana Putri - 223510821
+    </h1> 
+
+    <p>Tabel kegiatan</p> <br> 
+    <!-- Displaying activities in a table -->
+    <table>
+      <thead>
+        <tr>
+          <th>Kegiatan</th>
+          <th>Status</th>
+          <th>Tindakan</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="activity in activities" :key="activity.id" :class="{ completed: activity.completed }">
+          <td>
+            <!-- If activity is completed, display with strikethrough -->
+            <span :style="{ 'text-decoration': activity.completed ? 'line-through' : 'none' }">{{ activity.name }}</span>
+          </td>
+          <td>
+            <!-- If activity is completed, display 'Telah Selesai', otherwise 'Belum Selesai' -->
+            <span v-if="activity.completed">Telah Selesai</span>
+            <span v-else>Belum Selesai</span>
+            <input type="checkbox" v-model="activity.completed">
+          </td>
+          <td>
+            <button @click="cancelActivity(activity.id)">Hapus</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Form to add a new activity -->
+    <form @submit.prevent="addActivity"> <br>
+      <input type="text" v-model="newActivity" placeholder="Tambahkan Kegiatan"> <br> <br>
+      <button type="submit">Tambahkan</button>
+    </form>       
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2024 Nurul Hayana Putri</p>
+  </footer>
+</div>
+
+<!-- Vue Logic Script -->
+<script>
+  const { ref } = Vue;
+
+  // Sample data for activities
+  const activities = ref([
+    { id: 1, name: 'Memasak', completed: false },
+    { id: 2, name: 'Shopping', completed: false },
+    { id: 3, name: 'Membaca Buku', completed: false },
+    { id: 4, name: 'Menari', completed: false },
+
+  ]);
+
+  // Input field for new activity
+  const newActivity = ref('');
+
+  // Function to add a new activity
+  function addActivity() {
+    if (newActivity.value.trim() !== '') {
+      activities.value.push({ id: Date.now(), name: newActivity.value, completed: false });
+      newActivity.value = '';
+    }
+  }
+
+  // Function to cancel an activity
+  function cancelActivity(id) {
+    const index = activities.value.findIndex(activity => activity.id === id);
+    if (index !== -1) {
+      activities.value.splice(index, 1);
+    }
+  }
+
+  Vue.createApp({
+    setup() {
+      return { activities, newActivity, addActivity, cancelActivity };
+    }
+  }).mount('#app');
+</script>
+
+<!-- CSS for styling -->
+<style>
+
+/* CSS for the main container */
+
+h1 {
+  text-align: center;
+}
+
+
+body, html {
+  margin: 0;
+  padding: 0;
+}
+
+
+.background {
+  background-image: url(1.jpg);
+  color: white;
+  background-color: black;
+  background-repeat: no-repeat;
+  background-size: cover; /* Mengisi seluruh area background */
+  background-position: center; /* Posisikan gambar di tengah-tengah */
+  min-height: 100vh;
+  padding: 20px;
+}
+
+  /* Styling for completed activities */
+  .completed {
+    filter: blur(0.5px);
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  th, td {
+    border: 1px solid white;
+    padding: 8px;
+    text-align: left;
+  }
+
+
+  /* Adding strikethrough for completed activities */
+  .completed span {
+    text-decoration: line-through;
+  }
+
+  /* CSS for footer */
+  footer {
+  background-color: grey;
+  color: white;
+  text-align: center;
+  padding: 1px 0; /* Mengatur padding atas dan bawah 20px, samping 0 */
+  position: fixed; /* Ubah posisi ke fixed agar tetap di bagian bawah layar */
+  bottom: 0; /* Posisikan ke bagian bawah */
+  width: 100%; /* Lebar 100% untuk mengisi lebar layar */
+}
+  .Link {
+   text-align: center;
+  }
+  .Link {
+  text-align: center; /* Mengatur tata letak teks ke tengah */
+}
+
+/* CSS untuk input */
+input[type="text"] {
+  width: 9%; /* Lebar input */
+  padding: 8px; /* Padding input */
+  margin-bottom: 10px; /* Margin bawah untuk spasi */
+}
+
+/* CSS untuk tombol submit */
+button[type="submit"] {
+  background-color: white; /* Warna latar belakang tombol */
+  color: black; /* Warna teks tombol */
+  padding: 10px 20px; /* Padding tombol */
+  border: none; /* Hilangkan border */
+  cursor: pointer; /* Tampilan kursor ketika diarahkan ke tombol */
+}
+</style>
+</body>
+</html>
